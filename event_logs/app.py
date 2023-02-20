@@ -4,6 +4,7 @@ import logging
 import sys
 
 from flask import Flask, render_template
+from flask import current_app
 
 from event_logs import commands, public, user
 from event_logs.orm.event import EventLog
@@ -90,3 +91,11 @@ def configure_logger(app):
     handler = logging.StreamHandler(sys.stdout)
     if not app.logger.handlers:
         app.logger.addHandler(handler)
+
+def get_engine():
+    try:
+        # this works with Flask-SQLAlchemy<3 and Alchemical
+        return current_app.extensions['migrate'].db.get_engine()
+    except TypeError:
+        # this works with Flask-SQLAlchemy>=3
+        return current_app.extensions['migrate'].db.engine

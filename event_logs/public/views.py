@@ -11,63 +11,64 @@ from flask import (
 )
 from flask_login import login_required, login_user, logout_user
 
+from event_logs import app
 from event_logs.extensions import login_manager
+from event_logs.orm.event import EventLog
 from event_logs.public.forms import LoginForm
+from event_logs.services.importer.event_import import EventImporter
 from event_logs.user.forms import RegisterForm
 from event_logs.user.models import User
 from event_logs.utils import flash_errors
-from event_logs.services.importer.event_import import EventImporter
-from event_logs.orm.event import EventLog
+
 
 blueprint = Blueprint("public", __name__, static_folder="../static")
 
 @blueprint.route("/import_events")
 def import_events():
+    """Initial csv data load."""
     EventImporter().load_to_db()
     return "Imported data succeed"
 
-def _get_engine():
-        try:
-            # this works with Flask-SQLAlchemy<3 and Alchemical
-            return current_app.extensions['migrate'].db.get_engine()
-        except TypeError:
-            # this works with Flask-SQLAlchemy>=3
-            return current_app.extensions['migrate'].db.engine
 
 @blueprint.route("/query/<customer_id>")
 def query_events_by_customer_id(customer_id):
-    query = """SELECT strftime('%Y-%m-%d %H:00:00', timestamp) AS hour_bucket, COUNT(transaction_id)
+    """Display all events by customer_id."""
+    query = """SELECT customer_id, transaction_id, timestamp
                 FROM event_log 
                 WHERE customer_id = "{}" 
-                Group By hour_bucket""".format(customer_id) 
+                """.format(customer_id)
     
     results = []
 
-    with _get_engine().connect() as con:
+    with app.get_engine().connect() as con:
         rs = con.execute(query)
         for row in rs:
-            results.append(list(row))
+            results.append(dict(row))
             print(row)
 
     return results
 
 @blueprint.route("/query/<customer_id>/<start_time>/<end_time>")
-def query_events(customer_id, start_time, end_time):
-    #return start_time
-    query = """SELECT strftime('%Y-%m-%d %H:00:00', timestamp) AS hour_bucket, COUNT(transaction_id)
+def query_events_by_start_end_time(customer_id, start_time, end_time):
+    """Query and return customer events by hour between start and end time. """
+    query = """SELECT  
+                strftime('%Y-%m-%d %H:00:00', timestamp) AS hour_bucket, 
+                COUNT(transaction_id) AS total_transactions
                 FROM event_log 
-                WHERE customer_id = "{}" AND timestamp >= "{}" AND timestamp <= "{}"
-                Group By hour_bucket""".format(customer_id, start_time, end_time) 
+                WHERE customer_id = "{}" AND timestamp > "{}" AND timestamp < "{}"
+                Group By hour_bucket
+                ORDER By hour_bucket ASC""".format(customer_id, start_time, end_time) 
+                
     
     results = []
 
-    with _get_engine().connect() as con:
+    with app.get_engine().connect() as con:
         rs = con.execute(query)
         for row in rs:
-            results.append(list(row))
+            results.append(dict(row))
             print(row)
 
-    return results
+    return {"results":results,"customer_id":customer_id}
 
 @login_manager.user_loader
 def load_user(user_id):
