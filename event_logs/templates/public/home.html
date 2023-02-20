@@ -1,0 +1,31 @@
+
+{% extends "layout.html" %}
+{% block content %}
+<!-- Main jumbotron for a primary marketing message or call to action -->
+<div class="jumbotron">
+    <div class="container">
+    
+      <h1 class="display-3">Welcome to Event Log</h1>
+    
+      <p>This is a starter Flask template. It includes Bootstrap 5, jQuery 3, Flask-SQLAlchemy, WTForms, and various testing utilities out of the box.</p>
+      <p><a href="https://github.com/cookiecutter-flask/cookiecutter-flask" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+    </div>
+</div><!-- /.jumbotron -->
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-4">
+      <h2><i class="fa-solid fa-code"></i>Successful Request</h2>
+      <p><a class="btn btn-outline-secondary" href="http://localhost:8080/api/v1/property/sewer/septic?address=7904+Verde+Springs+Dr&zip_code=89128&api_key=10987654321">Try Me&raquo;</a></p>
+    </div>
+    <div class="col-lg-4">
+      <h2><i class="fa-solid fa-flask"></i>Failed Request</h2>
+      <p><a class="btn btn-outline-secondary" href="http://localhost:8080/api/v1/property/sewer/septic?address=79041+Verde+Springs+Dr&zip_code=89128&api_key=10987654321">Try Me&raquo;</a></p>
+    </div>
+    <div class="col-lg-4">
+      <h2><i class="fa-solid fa-flask"></i>Inspect API Result</h2>
+      <p><a class="btn btn-outline-secondary" href="http://localhost:8080/api/v1/property/api/housecanary?address=7904+Verde+Springs+Dr&zip_code=89128&api_key=10987654321">Try Me&raquo;</a></p>
+    </div>
+  </div><!-- /.row -->
+</div>
+{% endblock %}

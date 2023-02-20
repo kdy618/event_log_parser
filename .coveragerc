@@ -1,0 +1,5 @@
+[run]
+source = event_logs
+omit = 
+    tests/*
+    autoapp.py
