@@ -2,7 +2,7 @@
 
 Simple flask app that loads events.csv (static data) and provides view to display the events customer X sends in one hour buckets between timestamp A and B. In this app, timestamp A and B are represented as start and end time. 
 
-To run the app, go to http://localhost:8080/[http://localhost:8080/] and click the "Try Me" button for "View by CustomerId & Time" which passes in timestamp A and B. If you'd like to verify/view all the event logs for customer X, click "Try Me" button for "View by Customer Id" to verify returned results for "View by CustomerId & Time". 
+To run the app, go to [http://localhost:8080](http://localhost:8080) and click the "Try Me" button for "View by CustomerId & Time" which passes in timestamp A and B. If you'd like to verify/view all the event logs for customer X, click "Try Me" button for "View by Customer Id" to verify returned results for "View by CustomerId & Time". 
 
 If you'd like to try passing in different timestamp A and B, feel free to tweak datetime values on URL below. 
 
