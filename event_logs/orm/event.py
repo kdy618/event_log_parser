@@ -1,5 +1,6 @@
 from event_logs.database import Column, PkModel, db
 
+
 class EventLog(PkModel):
     __tablename__ = "event_log"
 

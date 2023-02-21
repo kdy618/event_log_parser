@@ -1,26 +1,35 @@
 from event_logs import app
 
+
 class EventLogService:
     def get_events_by_customer_id(self, customer_id):
+        """Queries and returns event logs by customer_id"""
         query = """SELECT customer_id, transaction_id, timestamp
                 FROM event_log 
                 WHERE customer_id = "{}" 
-                """.format(customer_id)
-    
+                """.format(
+            customer_id
+        )
+
         results = self._execute_sql_query(query)
         return results
 
     def get_events_by_customer_id_and_time(self, customer_id, start_time, end_time):
+        """Queries event logs by customer_id and
+        returns the events in one hour bucket between start and end time parameter.
+        """
         query = """SELECT  
                 strftime('%Y-%m-%d %H:00:00', timestamp) AS hour_bucket, 
                 COUNT(transaction_id) AS total_transactions
                 FROM event_log 
                 WHERE customer_id = "{}" AND timestamp > "{}" AND timestamp < "{}"
                 Group By hour_bucket
-                ORDER By hour_bucket ASC""".format(customer_id, start_time, end_time) 
-                
+                ORDER By hour_bucket ASC""".format(
+            customer_id, start_time, end_time
+        )
+
         results = self._execute_sql_query(query)
-        return {"results":results,"customer_id":customer_id}
+        return {"results": results, "customer_id": customer_id}
 
     def _execute_sql_query(self, query):
         results = []
@@ -28,6 +37,4 @@ class EventLogService:
             rs = con.execute(query)
             for row in rs:
                 results.append(dict(row))
-        return results 
-        
-            
+        return results

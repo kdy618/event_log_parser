@@ -24,6 +24,7 @@ from event_logs.utils import flash_errors
 
 blueprint = Blueprint("public", __name__, static_folder="../static")
 
+
 @blueprint.route("/import_events")
 def import_events():
     """Initial csv data load."""
@@ -38,11 +39,15 @@ def query_events_by_customer_id(customer_id):
 
     return EventLogService().get_events_by_customer_id(customer_id)
 
+
 @blueprint.route("/query/<customer_id>/<start_time>/<end_time>")
 def query_events_by_customer_id_and_time(customer_id, start_time, end_time):
-    """Query and return customer events by hour between start and end time. """
-    
-    return EventLogService().get_events_by_customer_id_and_time(customer_id, start_time, end_time)
+    """Query and return customer events by hour between start and end time."""
+
+    return EventLogService().get_events_by_customer_id_and_time(
+        customer_id, start_time, end_time
+    )
+
 
 @login_manager.user_loader
 def load_user(user_id):
