@@ -52,7 +52,7 @@ env/
 /event_logs/static/build/
 
 # Configuration
-.env
+#.env
 
 # Development database
-*.db
+#*.db
